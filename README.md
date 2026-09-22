@@ -187,3 +187,22 @@ This project demonstrates:
 ### Developed Using
 
 **Python + Streamlit + Pandas**
+
+### 📱 Emergency SMS
+- Select a saved emergency contact.
+- Generate an emergency message.
+- Send the emergency alert through Twilio SMS.
+- Display the message SID after successful submission.
+## ⚠️ Important Note
+
+This project is an educational safety-assistance application.
+
+The Emergency Alert module can send SMS messages through the Twilio
+Messaging API when valid Twilio credentials and an eligible recipient
+are configured.
+
+Twilio trial accounts have restrictions such as verified recipients
+and other trial limitations.
+
+For actual emergencies, users should contact the appropriate emergency
+service directly.

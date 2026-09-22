@@ -2,11 +2,25 @@ import streamlit as st
 import pandas as pd
 import os
 from datetime import datetime
+from dotenv import load_dotenv
+from twilio.rest import Client
 
 
-# -----------------------------
+# =========================================================
+# LOAD ENVIRONMENT VARIABLES
+# =========================================================
+
+load_dotenv()
+
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
+
+
+# =========================================================
 # PAGE CONFIGURATION
-# -----------------------------
+# =========================================================
+
 st.set_page_config(
     page_title="Personal Safety & Emergency Assistant",
     page_icon="🆘",
@@ -14,24 +28,36 @@ st.set_page_config(
 )
 
 
-# -----------------------------
+# =========================================================
 # FILE NAMES
-# -----------------------------
+# =========================================================
+
 CONTACT_FILE = "emergency_contacts.csv"
 INCIDENT_FILE = "incidents.csv"
 
 
-# -----------------------------
-# CREATE FILES IF NOT EXISTS
-# -----------------------------
+# =========================================================
+# CREATE CSV FILES IF THEY DON'T EXIST
+# =========================================================
+
 if not os.path.exists(CONTACT_FILE):
+
     contacts_df = pd.DataFrame(
-        columns=["Name", "Relationship", "Phone"]
+        columns=[
+            "Name",
+            "Relationship",
+            "Phone"
+        ]
     )
-    contacts_df.to_csv(CONTACT_FILE, index=False)
+
+    contacts_df.to_csv(
+        CONTACT_FILE,
+        index=False
+    )
 
 
 if not os.path.exists(INCIDENT_FILE):
+
     incidents_df = pd.DataFrame(
         columns=[
             "Date",
@@ -41,19 +67,26 @@ if not os.path.exists(INCIDENT_FILE):
             "Description"
         ]
     )
-    incidents_df.to_csv(INCIDENT_FILE, index=False)
+
+    incidents_df.to_csv(
+        INCIDENT_FILE,
+        index=False
+    )
 
 
-# -----------------------------
+# =========================================================
 # LOAD DATA
-# -----------------------------
+# =========================================================
+
 contacts_df = pd.read_csv(CONTACT_FILE)
+
 incidents_df = pd.read_csv(INCIDENT_FILE)
 
 
-# -----------------------------
+# =========================================================
 # SIDEBAR
-# -----------------------------
+# =========================================================
+
 st.sidebar.title("🆘 Safety Assistant")
 
 menu = st.sidebar.radio(
@@ -76,31 +109,38 @@ menu = st.sidebar.radio(
 
 if menu == "🏠 Dashboard":
 
-    st.title("🆘 Personal Safety & Emergency Assistant")
+    st.title(
+        "🆘 Personal Safety & Emergency Assistant"
+    )
 
-    st.subheader("Your Safety Support Dashboard")
+    st.subheader(
+        "Your Safety Support Dashboard"
+    )
 
     st.write(
-        "This application provides quick access to emergency "
-        "contacts, emergency alerts, incident reporting and "
-        "personal safety information."
+        "This application provides basic safety assistance "
+        "through emergency contacts, emergency alerts, "
+        "incident reporting, emergency numbers and safety tips."
     )
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
+
         st.metric(
             "Emergency Contacts",
             len(contacts_df)
         )
 
     with col2:
+
         st.metric(
             "Reported Incidents",
             len(incidents_df)
         )
 
     with col3:
+
         st.metric(
             "Emergency Services",
             4
@@ -108,50 +148,22 @@ if menu == "🏠 Dashboard":
 
     st.divider()
 
-    st.subheader("🚨 Quick Emergency Actions")
+    st.subheader(
+        "🚨 Quick Emergency Actions"
+    )
 
-    col1, col2 = st.columns(2)
-
-    with col1:
-
-        if st.button("🚨 Create Emergency Alert"):
-
-            st.warning(
-                "Go to the Emergency Alert section "
-                "to create an emergency message."
-            )
-
-        if st.button("📞 View Emergency Numbers"):
-
-            st.info(
-                "Police: 112 | Ambulance: 108 | "
-                "Fire: 101 | Women Helpline: 181"
-            )
-
-    with col2:
-
-        if st.button("📝 Report an Incident"):
-
-            st.info(
-                "Use the Report Incident section "
-                "to record an incident."
-            )
-
-        if st.button("🛡️ Safety Tips"):
-
-            st.info(
-                "Follow the Safety Tips section "
-                "for basic emergency precautions."
-            )
+    st.info(
+        "Use the Emergency Alert module to generate and "
+        "send an emergency SMS to a saved emergency contact."
+    )
 
     st.divider()
 
     st.subheader("⚠️ Important")
 
-    st.info(
-        "This application is an educational safety-assistance "
-        "project. It does not automatically contact emergency "
-        "services or send SMS messages."
+    st.warning(
+        "Emergency SMS functionality requires a properly "
+        "configured Twilio account and verified recipient."
     )
 
 
@@ -161,20 +173,27 @@ if menu == "🏠 Dashboard":
 
 elif menu == "👥 Emergency Contacts":
 
-    st.title("👥 Emergency Contacts")
+    st.title(
+        "👥 Emergency Contacts"
+    )
 
-    st.subheader("Add Emergency Contact")
+    st.subheader(
+        "Add Emergency Contact"
+    )
 
     with st.form("contact_form"):
 
-        name = st.text_input("Contact Name")
+        name = st.text_input(
+            "Contact Name"
+        )
 
         relationship = st.text_input(
             "Relationship"
         )
 
         phone = st.text_input(
-            "Phone Number"
+            "Phone Number",
+            placeholder="+919876543210"
         )
 
         submit = st.form_submit_button(
@@ -194,7 +213,10 @@ elif menu == "👥 Emergency Contacts":
                 )
 
                 contacts_df = pd.concat(
-                    [contacts_df, new_contact],
+                    [
+                        contacts_df,
+                        new_contact
+                    ],
                     ignore_index=True
                 )
 
@@ -217,7 +239,9 @@ elif menu == "👥 Emergency Contacts":
 
     st.divider()
 
-    st.subheader("📋 Saved Emergency Contacts")
+    st.subheader(
+        "📋 Saved Emergency Contacts"
+    )
 
     if len(contacts_df) > 0:
 
@@ -234,68 +258,138 @@ elif menu == "👥 Emergency Contacts":
 
 
 # =========================================================
-# EMERGENCY ALERT
+# EMERGENCY ALERT + SMS
 # =========================================================
 
 elif menu == "🚨 Emergency Alert":
 
-    st.title("🚨 Emergency Alert")
+    st.title(
+        "🚨 Emergency Alert"
+    )
 
     st.warning(
-        "This creates a simulated emergency message. "
-        "It does not automatically send an SMS."
+        "Use this module to generate an emergency message "
+        "and send it to a saved emergency contact."
     )
 
-    emergency_type = st.selectbox(
-        "Select Emergency Type",
-        [
-            "Medical Emergency",
-            "Accident",
-            "Personal Threat",
-            "Fire",
-            "Harassment",
-            "Missing Person",
-            "Other"
-        ]
-    )
+    if len(contacts_df) == 0:
 
-    location = st.text_input(
-        "Enter Current Location"
-    )
+        st.error(
+            "Please add at least one emergency contact first."
+        )
 
-    details = st.text_area(
-        "Describe the Emergency"
-    )
+    else:
 
-    if st.button("🚨 Generate Emergency Alert"):
+        contact_names = contacts_df["Name"].tolist()
 
-        if location and details:
+        selected_name = st.selectbox(
+            "Select Emergency Contact",
+            contact_names
+        )
 
-            alert_message = f"""
-🚨 EMERGENCY ALERT 🚨
+        selected_contact = contacts_df[
+            contacts_df["Name"] == selected_name
+        ].iloc[0]
 
-Emergency Type: {emergency_type}
+        recipient_number = selected_contact["Phone"]
 
-Location:
-{location}
+        st.info(
+            f"SMS will be sent to: {recipient_number}"
+        )
 
-Details:
-{details}
+        emergency_type = st.selectbox(
+            "Select Emergency Type",
+            [
+                "Medical Emergency",
+                "Accident",
+                "Personal Threat",
+                "Fire",
+                "Harassment",
+                "Missing Person",
+                "Other"
+            ]
+        )
 
-Please provide immediate assistance.
-"""
+        location = st.text_input(
+            "Enter Current Location"
+        )
 
-            st.error(alert_message)
+        details = st.text_area(
+            "Describe the Emergency"
+        )
 
-            st.success(
-                "Emergency message generated successfully."
-            )
+        if st.button(
+            "🚨 Send Emergency SMS"
+        ):
 
-        else:
+            if not location or not details:
 
-            st.error(
-                "Please enter location and emergency details."
-            )
+                st.error(
+                    "Please enter location and emergency details."
+                )
+
+            elif not recipient_number.startswith("+"):
+
+                st.error(
+                    "Please store the phone number in E.164 format, "
+                    "for example +919876543210."
+                )
+
+            elif not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN or not TWILIO_PHONE_NUMBER:
+
+                st.error(
+                    "Twilio credentials are not configured. "
+                    "Please check your .env file."
+                )
+
+            else:
+
+                emergency_message = (
+                    "EMERGENCY ALERT\n\n"
+                    f"Type: {emergency_type}\n"
+                    f"Location: {location}\n"
+                    f"Details: {details}\n\n"
+                    "Please provide immediate assistance."
+                )
+
+                try:
+
+                    client = Client(
+                        TWILIO_ACCOUNT_SID,
+                        TWILIO_AUTH_TOKEN
+                    )
+
+                    message = client.messages.create(
+                        body=emergency_message,
+                        from_=TWILIO_PHONE_NUMBER,
+                        to=recipient_number
+                    )
+
+                    st.success(
+                        "✅ Emergency SMS sent successfully!"
+                    )
+
+                    st.write(
+                        f"Message SID: {message.sid}"
+                    )
+
+                    st.subheader(
+                        "📨 Message Sent"
+                    )
+
+                    st.info(
+                        emergency_message
+                    )
+
+                except Exception as e:
+
+                    st.error(
+                        "❌ SMS could not be sent."
+                    )
+
+                    st.write(
+                        f"Error: {e}"
+                    )
 
 
 # =========================================================
@@ -304,7 +398,9 @@ Please provide immediate assistance.
 
 elif menu == "📝 Report Incident":
 
-    st.title("📝 Report an Incident")
+    st.title(
+        "📝 Report an Incident"
+    )
 
     incident_type = st.selectbox(
         "Incident Type",
@@ -337,7 +433,9 @@ elif menu == "📝 Report Incident":
         "Incident Description"
     )
 
-    if st.button("📝 Save Incident Report"):
+    if st.button(
+        "📝 Save Incident Report"
+    ):
 
         if location and description:
 
@@ -354,7 +452,10 @@ elif menu == "📝 Report Incident":
             )
 
             incidents_df = pd.concat(
-                [incidents_df, new_incident],
+                [
+                    incidents_df,
+                    new_incident
+                ],
                 ignore_index=True
             )
 
@@ -382,7 +483,9 @@ elif menu == "📝 Report Incident":
 
 elif menu == "📋 Incident History":
 
-    st.title("📋 Incident History")
+    st.title(
+        "📋 Incident History"
+    )
 
     if len(incidents_df) > 0:
 
@@ -391,13 +494,17 @@ elif menu == "📋 Incident History":
             use_container_width=True
         )
 
-        st.subheader("📊 Incident Summary")
+        st.subheader(
+            "📊 Incident Summary"
+        )
 
         type_counts = incidents_df[
             "Incident Type"
         ].value_counts()
 
-        st.bar_chart(type_counts)
+        st.bar_chart(
+            type_counts
+        )
 
     else:
 
@@ -412,7 +519,9 @@ elif menu == "📋 Incident History":
 
 elif menu == "📞 Emergency Numbers":
 
-    st.title("📞 Emergency Numbers")
+    st.title(
+        "📞 Emergency Numbers"
+    )
 
     emergency_numbers = pd.DataFrame(
         {
@@ -431,7 +540,9 @@ elif menu == "📞 Emergency Numbers":
         }
     )
 
-    st.table(emergency_numbers)
+    st.table(
+        emergency_numbers
+    )
 
     st.warning(
         "For an actual emergency, contact the appropriate "
@@ -445,9 +556,13 @@ elif menu == "📞 Emergency Numbers":
 
 elif menu == "🛡️ Safety Tips":
 
-    st.title("🛡️ Personal Safety Tips")
+    st.title(
+        "🛡️ Personal Safety Tips"
+    )
 
-    st.subheader("🚶 While Travelling")
+    st.subheader(
+        "🚶 Travel Safety"
+    )
 
     st.write(
         "• Share your travel plans with a trusted person."
@@ -461,7 +576,9 @@ elif menu == "🛡️ Safety Tips":
         "• Keep your phone charged."
     )
 
-    st.subheader("📱 Digital Safety")
+    st.subheader(
+        "📱 Digital Safety"
+    )
 
     st.write(
         "• Do not share passwords or OTPs."
@@ -472,24 +589,28 @@ elif menu == "🛡️ Safety Tips":
     )
 
     st.write(
-        "• Enable screen lock and device security."
+        "• Use screen lock and device security."
     )
 
-    st.subheader("🚨 During an Emergency")
+    st.subheader(
+        "🚨 During an Emergency"
+    )
 
     st.write(
         "• Move to a safer location if possible."
     )
 
     st.write(
-        "• Contact emergency services when necessary."
+        "• Contact appropriate emergency services."
     )
 
     st.write(
         "• Inform a trusted person about the situation."
     )
 
-    st.subheader("🩺 Medical Emergency")
+    st.subheader(
+        "🩺 Medical Emergency"
+    )
 
     st.write(
         "• Seek professional medical assistance."
