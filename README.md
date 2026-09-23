@@ -2,128 +2,183 @@
 
 ## 📌 Project Description
 
-Personal Safety & Emergency Assistant is a Python and Streamlit-based application designed to provide basic safety assistance during emergency situations.
+Personal Safety & Emergency Assistant is a lightweight web-based application developed using **Python and Streamlit**.
 
-The application allows users to manage emergency contacts, generate simulated emergency alerts, report and track incidents, view important emergency numbers, and access personal safety guidelines.
+The application helps users manage emergency contacts, generate emergency alert messages, report incidents, view incident history, access important emergency numbers, and read personal safety tips.
 
-This project demonstrates how Python and Streamlit can be used to develop a practical, user-friendly daily-life application.
+This project is designed as a simple academic application for demonstrating how Python and Streamlit can be used to develop a useful real-life safety-support system.
+
+---
 
 ## 🎯 Objectives
 
-* Provide a simple personal safety assistance platform.
-* Maintain important emergency contact information.
-* Generate emergency alert messages quickly.
-* Record and manage incident details.
-* Provide easy access to emergency numbers.
-* Provide basic personal safety guidelines.
-* Demonstrate Python, Streamlit, Pandas, and CSV data storage.
+* To provide a simple personal safety support platform.
+* To maintain emergency contact information.
+* To generate emergency alert messages quickly.
+* To record and maintain incident details.
+* To provide important emergency service numbers.
+* To provide useful personal and digital safety tips.
+* To demonstrate a lightweight Python and Streamlit application.
 
-## 🚀 Features
+---
+
+## ✨ Features
 
 ### 🏠 Dashboard
 
-* Emergency contact count
-* Reported incident count
-* Quick access to safety modules
+Displays:
+
+* Number of emergency contacts
+* Number of reported incidents
+* Emergency service information
+* Quick emergency guidance
 
 ### 👥 Emergency Contacts
 
+Users can:
+
 * Add emergency contacts
-* Store name, relationship, and phone number
+* Store name
+* Store relationship
+* Store phone number
 * View saved contacts
 
 ### 🚨 Emergency Alert
 
+Users can:
+
+* Select an emergency contact
 * Select emergency type
-* Enter location
+* Enter current location
 * Enter emergency details
-* Generate a simulated emergency message
+* Generate an emergency message
+
+The generated message can be copied and manually sent through SMS or another messaging application.
 
 ### 📝 Incident Reporting
 
-* Record different types of incidents
-* Store date and time
-* Record location and description
-* Select incident severity
+Users can record:
+
+* Incident type
+* Location
+* Severity
+* Description
+* Date and time
 
 ### 📋 Incident History
 
-* View reported incidents
-* Display incident information in a table
-* View incident summary chart
+Displays previously reported incidents.
 
 ### 📞 Emergency Numbers
 
-The application provides quick access to commonly used emergency numbers.
+Provides commonly used emergency numbers such as:
+
+* Emergency Services – 112
+* Ambulance – 108
+* Fire – 101
+* Women Helpline – 181
 
 ### 🛡️ Safety Tips
 
-Provides basic guidance related to travel safety, digital safety, emergencies, and medical emergencies.
+Provides basic guidance related to:
+
+* Travel safety
+* Digital safety
+* Emergency situations
+* Medical emergencies
+
+---
 
 ## 🛠️ Technologies Used
 
 * Python
 * Streamlit
-* Pandas
 * CSV
-* VS Code
-* Git
-* GitHub
+* Python built-in modules
 
-## 📂 Project Structure
+### Python Built-in Modules
+
+* `csv`
+* `os`
+* `datetime`
+
+---
+
+## 📦 Required Package
+
+Only one external Python package is required:
 
 ```text
-Personal-Safety-Emergency-Assistant/
+streamlit
+```
+
+The project does not require:
+
+* Pandas
+* Twilio
+* python-dotenv
+* Any SMS API
+
+---
+
+## 📁 Project Structure
+
+```text
+Personal-Safety-Emergency-Assistant
 │
 ├── app.py
 ├── emergency_contacts.csv
 ├── incidents.csv
 ├── requirements.txt
-├── README.md
-└── .gitignore
+├── .gitignore
+└── venv
 ```
 
-## ⚙️ Installation
+---
 
-### 1. Clone the repository
+## ▶️ How to Run the Project
+
+### Step 1: Clone the repository
 
 ```bash
 git clone YOUR_GITHUB_REPOSITORY_URL
 ```
 
-### 2. Open the project folder
+### Step 2: Open the project folder
 
 ```bash
 cd Personal-Safety-Emergency-Assistant
 ```
 
-### 3. Create a virtual environment
+### Step 3: Create virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-### 4. Activate the virtual environment
+### Step 4: Activate virtual environment
 
-For Windows PowerShell:
-
-```powershell
-venv\Scripts\activate
-```
-
-### 5. Install required packages
+Windows PowerShell:
 
 ```powershell
-python -m pip install -r requirements.txt
+.\venv\Scripts\Activate.ps1
 ```
 
-## ▶️ Run the Application
+### Step 5: Install Streamlit
 
-```powershell
-streamlit run app.py
+```bash
+python -m pip install streamlit
 ```
 
-The application will open in a web browser.
+### Step 6: Run the application
+
+```bash
+python -m streamlit run app.py
+```
+
+The application will open in the web browser.
+
+---
 
 ## 💾 Data Storage
 
@@ -133,7 +188,7 @@ The application uses CSV files for simple local data storage.
 
 Stores:
 
-* Contact Name
+* Name
 * Relationship
 * Phone Number
 
@@ -147,62 +202,40 @@ Stores:
 * Severity
 * Description
 
+No database server is required.
+
+---
+
 ## ⚠️ Important Note
 
-This project is an educational and simulated safety-assistance application.
+This project is an academic safety-support application.
 
-The Emergency Alert module only generates an emergency message. It does not automatically send SMS messages, make phone calls, track GPS location, or directly contact emergency services.
+The Emergency Alert module **generates an emergency message but does not automatically send SMS messages**.
 
-For an actual emergency, users should contact the appropriate emergency service directly.
+For real emergencies, users should contact the appropriate emergency service directly.
 
-## 🔮 Future Enhancements
+---
 
-* GPS-based location detection
-* SMS alert integration
-* Email notifications
-* User authentication
-* Cloud database
-* Nearby hospital and police station search
-* Voice-based SOS activation
-* AI-based emergency classification
-* One-click SOS functionality
-* Mobile application support
+## 🚀 Future Enhancements
 
-## 🎓 Academic Application
+Future versions can include:
 
-This project demonstrates:
+* Automatic SMS alerts
+* GPS-based location sharing
+* Mobile application version
+* User login and authentication
+* Database integration
+* Emergency alert notifications
+* Interactive safety map
+* Cloud-based data storage
+* AI-based emergency assistance
 
-* Python programming
-* Streamlit web application development
-* Data handling using Pandas
-* CSV-based storage
-* User interface design
-* Problem-solving
-* Git and GitHub version control
+---
 
 ## 👩‍💻 Project Type
 
-**Application-Oriented Daily-Life Safety Project**
+**Application-Oriented Python & Streamlit Project**
 
-### Developed Using
+## 📚 Purpose
 
-**Python + Streamlit + Pandas**
-
-### 📱 Emergency SMS
-- Select a saved emergency contact.
-- Generate an emergency message.
-- Send the emergency alert through Twilio SMS.
-- Display the message SID after successful submission.
-## ⚠️ Important Note
-
-This project is an educational safety-assistance application.
-
-The Emergency Alert module can send SMS messages through the Twilio
-Messaging API when valid Twilio credentials and an eligible recipient
-are configured.
-
-Twilio trial accounts have restrictions such as verified recipients
-and other trial limitations.
-
-For actual emergencies, users should contact the appropriate emergency
-service directly.
+Developed as an academic project to demonstrate the practical use of Python programming and Streamlit for solving real-life problems.
